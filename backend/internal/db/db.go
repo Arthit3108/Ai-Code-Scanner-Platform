@@ -25,13 +25,7 @@ func InitDB() {
 			user = "postgres"
 		}
 		password := os.Getenv("DB_PASSWORD")
-		if password == "" {
-			password = "password"
-		}
 		dbname := os.Getenv("DB_NAME")
-		if dbname == "" {
-			dbname = "devsecops"
-		}
 		port := os.Getenv("DB_PORT")
 		if port == "" {
 			port = "5432"
