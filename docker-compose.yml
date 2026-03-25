@@ -1,18 +1,40 @@
 version: '3.8'
-
 services:
+
   db:
-    image: postgres:15-alpine
-    container_name: devsecops-postgres
+    image: postgres:13
+    container_name: code-scanner-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: devsecops
-    ports:
-      - "5432:5432"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+  backend:
+    build: ./backend
+    container_name: code-scanner-backend
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=postgres
+      - BACKEND_URL=http://localhost
+      - FRONTEND_URL=http://localhost
+      - GITHUB_CLIENT_ID=Ov23liIb4175aC9u7VvP
+      - GITHUB_CLIENT_SECRET=96fe8a3f0a26fcca65977f79ee074ec572c99413
+      - GEMINI_API_KEY=AIzaSyBUEIJIE9Bc1OJWLMMz8wyDi8pUxq0l8ek
+    depends_on:
+      - db
+
+  nginx:
+    build: ./frontend
+    container_name: code-scanner-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
     restart: unless-stopped
 
 volumes:
-  pgdata:
+  postgres_data:

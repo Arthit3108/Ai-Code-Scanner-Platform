@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShieldCheck, Mail } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 const Login: React.FC = () => {
   const handleGoogleLogin = () => {

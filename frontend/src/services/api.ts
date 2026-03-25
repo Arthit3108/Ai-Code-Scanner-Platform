@@ -1,6 +1,6 @@
 import type { ScanResponse, ScanJob } from '../types/scan';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export const startScan = async (repoUrl: string): Promise<ScanResponse> => {
   const response = await fetch(`${API_URL}/scan`, {
