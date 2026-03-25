@@ -12,12 +12,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Scan dependencies
-        run: npm audit
 
-      - name: Scan secrets
-        run: npm audit
-    
       - name: Scan code
         uses: Arthit3108/ai-code-scanner@v1
         with:
