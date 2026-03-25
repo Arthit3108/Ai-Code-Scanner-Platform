@@ -1,0 +1,27 @@
+name: scan dependencies, secret
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Scan dependencies
+        run: npm audit
+
+      - name: Scan secrets
+        run: npm audit
+    
+      - name: Scan code
+        uses: Arthit3108/ai-code-scanner@v1
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          severity: HIGH,CRITICAL
+          fail_on_critical: 'true'
+          
