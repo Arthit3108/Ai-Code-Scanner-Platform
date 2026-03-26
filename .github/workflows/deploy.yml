@@ -62,7 +62,9 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           # 1. Login ECR บน EC2
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCESS_KEY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          cd ./app
+          
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com
           
           # 4. Pull และ Restart
           docker compose pull
