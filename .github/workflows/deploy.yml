@@ -32,8 +32,9 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_BACKEND }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./backend
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ./backend
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
     # Build & Push Frontend (Nginx included)
     - name: Build, tag, and push Frontend image
@@ -42,8 +43,9 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_FRONTEND }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./frontend
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest ./frontend
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
   deploy-to-ec2:
     needs: build-and-push
@@ -61,10 +63,6 @@ jobs:
         script: |
           # 1. Login ECR บน EC2
           aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCESS_KEY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          
-          # 3. อัปเดต Image Tag ใน docker-compose หรือใช้ ENV
-          export IMAGE_TAG=${{ github.sha }}
-          export ECR_REGISTRY=${{ secrets.AWS_ACCESS_KEY_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
           
           # 4. Pull และ Restart
           docker-compose pull
