@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 )
 
+func SetupMiddleware(app *fiber.App) {
 	frontendUrl := os.Getenv("FRONTEND_URL")
 	if frontendUrl == "" {
 		frontendUrl = "http://localhost:5173, http://localhost:5174"
