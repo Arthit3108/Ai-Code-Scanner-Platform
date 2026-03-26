@@ -62,8 +62,8 @@ function App() {
         <main style={{ minHeight: 'calc(100vh - 85px)' }}>
           <Routes>
             <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
-            <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
-            <Route path="/dashboard/:runId" element={user ? <Dashboard /> : <Navigate to="/login" />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard/:runId" element={<Dashboard />} />
             <Route path="/repos" element={user ? <Repositories /> : <Navigate to="/login" />} />
           </Routes>
         </main>

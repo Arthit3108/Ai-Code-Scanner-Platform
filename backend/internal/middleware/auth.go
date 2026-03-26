@@ -46,3 +46,39 @@ func RequireAuth(c *fiber.Ctx) error {
 	c.Locals("user", &user)
 	return c.Next()
 }
+
+func OptionalAuth(c *fiber.Ctx) error {
+	tokenString := c.Cookies("jwt")
+
+	if tokenString == "" {
+		authHeader := c.Get("Authorization")
+		if strings.HasPrefix(authHeader, "Bearer ") {
+			tokenString = strings.TrimPrefix(authHeader, "Bearer ")
+		}
+	}
+
+	if tokenString == "" {
+		return c.Next()
+	}
+
+	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+		return config.JwtSecret, nil
+	})
+
+	if err != nil || !token.Valid {
+		return c.Next()
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return c.Next()
+	}
+
+	userID := claims["user_id"]
+	var user models.User
+	if err := db.DB.First(&user, userID).Error; err == nil {
+		c.Locals("user", &user)
+	}
+
+	return c.Next()
+}

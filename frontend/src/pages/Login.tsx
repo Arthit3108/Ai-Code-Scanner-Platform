@@ -29,32 +29,20 @@ const Login: React.FC = () => {
           <ShieldCheck size={32} className="text-primary" />
         </div>
         
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '8px' }}>Welcome Back</h2>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 700, marginBottom: '8px' }}>Welcome</h2>
         <p className="text-muted" style={{ marginBottom: '32px' }}>
           Sign in to access your secure code analysis platform.
         </p>
 
-        <div className="flex flex-col gap-4">
-          <button 
-            onClick={handleGoogleLogin} 
-            className="btn" 
-            style={{ background: 'white', color: '#333', border: '1px solid #ddd', padding: '14px' }}
-          >
-            <Mail size={20} color="#ea4335" /> Continue with Google
-          </button>
-          
+        <div className="flex flex-col gap-4 justify-center">
           <button 
             onClick={handleGithubLogin} 
             className="btn" 
             style={{ background: '#24292e', color: 'white', padding: '14px' }}
           >
-            &#128025; Continue with GitHub
+            😎 Continue with GitHub
           </button>
         </div>
-
-        <p style={{ fontSize: '0.8rem', marginTop: '32px', color: 'var(--text-muted)' }}>
-          By continuing, you agree to our Terms of Service and Privacy Policy.
-        </p>
       </div>
     </div>
   );
