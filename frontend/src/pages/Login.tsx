@@ -1,13 +1,9 @@
 import React from 'react';
-import { ShieldCheck, Mail } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 const Login: React.FC = () => {
-  const handleGoogleLogin = () => {
-    window.location.href = `${API_URL}/auth/google/login`;
-  };
-
   const handleGithubLogin = () => {
     window.location.href = `${API_URL}/auth/github/login`;
   };
