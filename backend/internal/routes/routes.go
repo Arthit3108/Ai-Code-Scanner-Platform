@@ -23,7 +23,7 @@ func SetupRoutes(app *fiber.App, h *handler.ScanHandler) {
 	auth.Get("/me", middleware.RequireAuth, handler.GetMe)
 	auth.Post("/logout", handler.Logout)
 
-	api.Post("/scan", middleware.RequireAuth, h.StartScan)
-	api.Get("/scan/:run_id", middleware.RequireAuth, h.GetScan)
+	api.Post("/scan", middleware.OptionalAuth, h.StartScan)
+	api.Get("/scan/:run_id", middleware.OptionalAuth, h.GetScan)
 	api.Get("/repos", middleware.RequireAuth, handler.GetUserRepos)
 }

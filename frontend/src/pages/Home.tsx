@@ -47,7 +47,7 @@ const Home: React.FC = () => {
           Enter your GitHub repository URL below to trigger an AI-enhanced security scan detecting vulnerabilities, secrets, and misconfigurations.
         </p>
 
-        <form onSubmit={handleScan} className="flex flex-col gap-4">
+        <form onSubmit={handleScan} className="flex flex-col gap-4 justify-center">
           <div style={{ position: 'relative' }}>
             <div style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
               <Search size={20} />
