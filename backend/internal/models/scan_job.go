@@ -18,8 +18,8 @@ const (
 
 type ScanJob struct {
 	RunID        string               `gorm:"primaryKey" json:"run_id"`
-	UserID       *uint                `gorm:"index" json:"user_id,omitempty"`       // nullable for unauthenticated scans? or force auth
-	RepositoryID *uint                `gorm:"index" json:"repository_id,omitempty"` // nullable
+	UserID       *uint                `gorm:"index" json:"user_id,omitempty"` 
+	RepositoryID *uint                `gorm:"index" json:"repository_id,omitempty"` 
 	RepoURL      string               `json:"repo_url"`
 	Status       ScanStatus           `json:"status"`
 	Error        string               `json:"error,omitempty"`
