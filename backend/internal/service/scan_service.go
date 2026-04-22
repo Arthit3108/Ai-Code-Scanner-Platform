@@ -15,10 +15,13 @@ import (
 
 type ScanService struct {}
 
+// NewScanService creates a new instance of the scanning service.
 func NewScanService() *ScanService {
 	return &ScanService{}
 }
 
+// InitScan initializes a new scan job, records it in the database, and kicks off the background pipeline.
+// It returns a unique runID that can be used to poll for results.
 func (s *ScanService) InitScan(repoURL string, user *models.User) (string, error) {
 	runID := uuid.New().String()
 
@@ -50,11 +53,13 @@ func (s *ScanService) InitScan(repoURL string, user *models.User) (string, error
 		return "", err
 	}
 
+	// Kick off the scanning pipeline in a separate goroutine to avoid blocking the request
 	go s.runPipeline(job)
 
 	return runID, nil
 }
 
+// runPipeline manages the entire lifecycle of a scan job: Clone -> Scan -> AI Analysis -> Store.
 func (s *ScanService) runPipeline(job models.ScanJob) {
 	// ── Step 1: Clone ──────────────────────────────────────────────────────
 	s.updateStatus(&job, models.StatusCloning, "")
@@ -137,6 +142,7 @@ func (s *ScanService) runPipeline(job models.ScanJob) {
 	db.DB.Save(&job)
 }
 
+// updateStatus is a helper to update both the in-memory job object and the database record.
 func (s *ScanService) updateStatus(job *models.ScanJob, status models.ScanStatus, errMsg string) {
 	job.Status = status
 	job.Error = errMsg
@@ -148,6 +154,7 @@ func (s *ScanService) updateStatus(job *models.ScanJob, status models.ScanStatus
 	})
 }
 
+// GetJob retrieves a scan job by its unique runID.
 func (s *ScanService) GetJob(runID string) (*models.ScanJob, bool) {
 	var job models.ScanJob
 	if err := db.DB.Where("run_id = ?", runID).First(&job).Error; err != nil {
@@ -156,6 +163,7 @@ func (s *ScanService) GetJob(runID string) (*models.ScanJob, bool) {
 	return &job, true
 }
 
+// cloneRepo performs a shallow clone (depth=1) of the target repository into a temporary directory.
 func (s *ScanService) cloneRepo(url, dest string) error {
 	fmt.Printf("Cloning repository %s into: %s\n", url, dest)
 	cmd := exec.Command("git", "clone", "--depth=1", url, dest)

@@ -13,10 +13,12 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     if (!runId) return;
 
+    // fetchStatus polls the backend to check if the scan is finished.
     const fetchStatus = async () => {
       try {
         const data = await getScanStatus(runId);
         setJob(data);
+        // If status is 'done' or 'failed', we stop the polling process.
         if (data.status === 'done' || data.status === 'failed') {
           return true; // Stop polling
         }
@@ -28,6 +30,7 @@ const Dashboard: React.FC = () => {
     };
 
     fetchStatus();
+    // Set up a 3-second interval to check for status updates (Polling Pattern)
     const interval = setInterval(async () => {
       const shouldStop = await fetchStatus();
       if (shouldStop) clearInterval(interval);

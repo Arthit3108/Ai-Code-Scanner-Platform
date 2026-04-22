@@ -15,11 +15,13 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// GoogleLogin redirects the user to Google's OAuth2 consent page.
 func GoogleLogin(c *fiber.Ctx) error {
 	url := config.GoogleOAuthConfig.AuthCodeURL("state")
 	return c.Redirect(url)
 }
 
+// GoogleCallback handles the response from Google, fetches user info, and creates/logs in the user.
 func GoogleCallback(c *fiber.Ctx) error {
 	code := c.Query("code")
 	token, err := config.GoogleOAuthConfig.Exchange(context.Background(), code)
@@ -52,11 +54,13 @@ func GoogleCallback(c *fiber.Ctx) error {
 	return setJWTAndRedirect(c, user)
 }
 
+// GithubLogin redirects the user to GitHub's OAuth2 login page.
 func GithubLogin(c *fiber.Ctx) error {
 	url := config.GithubOAuthConfig.AuthCodeURL("state")
 	return c.Redirect(url)
 }
 
+// GithubCallback handles the response from GitHub, retrieves user data (including private emails), and logs in.
 func GithubCallback(c *fiber.Ctx) error {
 	code := c.Query("code")
 	token, err := config.GithubOAuthConfig.Exchange(context.Background(), code)
@@ -120,6 +124,7 @@ func GithubCallback(c *fiber.Ctx) error {
 	return setJWTAndRedirect(c, user)
 }
 
+// findOrCreateUser searches for a user by provider identity or creates a new one if not found.
 func findOrCreateUser(provider, providerID, email, name, avatarURL string) (*models.User, error) {
 	var user models.User
 	result := db.DB.Where("provider = ? AND provider_id = ?", provider, providerID).First(&user)
@@ -139,6 +144,7 @@ func findOrCreateUser(provider, providerID, email, name, avatarURL string) (*mod
 	return &user, nil
 }
 
+// setJWTAndRedirect generates a JWT token, sets it as an HTTP-only cookie, and redirects to the frontend.
 func setJWTAndRedirect(c *fiber.Ctx, user *models.User) error {
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": user.ID,
@@ -167,6 +173,7 @@ func setJWTAndRedirect(c *fiber.Ctx, user *models.User) error {
 	return c.Redirect(frontendUrl)
 }
 
+// GetMe returns the current authenticated user's information from the context.
 func GetMe(c *fiber.Ctx) error {
 	user := c.Locals("user")
 	if user == nil {
@@ -175,6 +182,7 @@ func GetMe(c *fiber.Ctx) error {
 	return c.JSON(user)
 }
 
+// Logout clears the JWT cookie to log out the user.
 func Logout(c *fiber.Ctx) error {
 	c.Cookie(&fiber.Cookie{
 		Name:     "jwt",

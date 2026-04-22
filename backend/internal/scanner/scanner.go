@@ -1,7 +1,14 @@
 package scanner
 
+// Scanner is an interface that every security tool must implement.
+// This allows the runner to execute different tools interchangeably (Polymorphism).
+// Each tool (e.g., Trivy, Gitleaks) defines its own logic for scanning a repository
+// by implementing the Name() and Run() methods.
 type Scanner interface {
+	// Name returns the unique identifier for the security tool.
 	Name() string
+	// Run executes the security tool against the provided repository path.
+	// It handles command execution (exec.Command) and output parsing.
 	Run(repoPath string) ScanResult
 }
 

@@ -16,6 +16,7 @@ const (
 	StatusFailed   ScanStatus = "failed"
 )
 
+// ScanJob represents a single security scanning execution for a repository.
 type ScanJob struct {
 	RunID        string               `gorm:"primaryKey" json:"run_id"`
 	UserID       *uint                `gorm:"index" json:"user_id,omitempty"` 
@@ -23,6 +24,7 @@ type ScanJob struct {
 	RepoURL      string               `json:"repo_url"`
 	Status       ScanStatus           `json:"status"`
 	Error        string               `json:"error,omitempty"`
+	// Results are stored as a JSON blob in the database for flexibility (GORM Serializer).
 	Results      []scanner.ScanResult `gorm:"serializer:json" json:"results,omitempty"`
 	CreatedAt    time.Time            `json:"created_at"`
 	UpdatedAt    time.Time            `json:"updated_at"`

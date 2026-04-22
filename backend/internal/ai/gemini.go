@@ -12,6 +12,7 @@ import (
 
 type GeminiClient struct{}
 
+// NewGeminiClient initializes a new client for interacting with Google's Gemini AI.
 func NewGeminiClient() *GeminiClient {
 	return &GeminiClient{}
 }
@@ -33,6 +34,7 @@ type AiAnalysis struct {
 	FixExplanation string `json:"fix_explanation"`
 }
 
+// AnalyzeVulnerabilities sends a batch of findings to Gemini to get remediation advice (fix commands and explanations).
 func (c *GeminiClient) AnalyzeVulnerabilities(vulns []VulnerabilityInput) ([]AiAnalysis, error) {
 	ctx := context.Background()
 	client, err := genai.NewClient(ctx, &genai.ClientConfig{
